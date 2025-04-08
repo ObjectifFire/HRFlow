@@ -1,11 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe "API::V1::Employees", type: :request do
+  let(:first_user) { FactoryBot.create(:employee, first_name: "Alice", last_name: "Smith", email: "alice@example.com", country: "France") }
+  let(:second_user) { FactoryBot.create(:employee, first_name: "Bob", last_name: "Jones", email: "bob@example.com", country: "USA") }
   describe "GET /api/v1/employees" do
     before do
-      create(:employee, first_name: "Alice", last_name: "Smith", email: "alice@example.com", country: "France")
-      create(:employee, first_name: "Bob", last_name: "Jones", email: "bob@example.com", country: "USA")
-    end
+      first_user
+      second_user
+     end
 
     it "returns a list of employees with expected fields" do
       get "/api/v1/employees"
