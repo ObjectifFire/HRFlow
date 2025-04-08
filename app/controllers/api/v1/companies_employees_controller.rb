@@ -21,7 +21,6 @@ class Api::V1::CompaniesEmployeesController < ApplicationController
     end
   end
 
-
   def destroy
     if @company.employees.exists?(@employee.id)
       @company.employees.destroy(@employee)
@@ -32,14 +31,13 @@ class Api::V1::CompaniesEmployeesController < ApplicationController
   end
 
   private
+    def set_company
+      @company = Company.find_by(id: params[:company_id])
+      render json: { error: "Company not found" }, status: :not_found unless @company
+    end
 
-  def set_company
-    @company = Company.find_by(id: params[:company_id])
-    render json: { error: "Company not found" }, status: :not_found unless @company
-  end
-
-  def set_employee
-    @employee = Employee.find_by(id: params[:employee_id])
-    render json: { error: "Employee not found" }, status: :not_found unless @employee
-  end
+    def set_employee
+      @employee = Employee.find_by(id: params[:employee_id])
+      render json: { error: "Employee not found" }, status: :not_found unless @employee
+    end
 end
