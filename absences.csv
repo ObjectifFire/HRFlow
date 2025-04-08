@@ -1,0 +1,17 @@
+SIRET,Email,Date,Durée,Etat
+12345678901234,alice.smith@example.com,02/10/23,2 days,Validé
+12345678901234,alice.smith@example.com,24/12/23,1 days,Validé
+12345678901234,alice.smith@example.com,26/12/23,1 days,Validé
+12345678901234,bob.johnson@example.com,05/09/23,0.5 days,Validé
+12345678901234,charlie.brown@example.com,11/08/23,1 days,Annulé
+23456789012345,alice.smith@example.com,10/09/23,3 days,Validé
+23456789012345,eva.davis@example.com,14/09/23,2 days,Validé
+23456789012345,eva.davis@example.com,14/01/24,7 days,En attente de validation
+23456789012345,frank.miller@example.com,08/10/23,1 days,Annulé
+23456789012345,frank.miller@example.com,08/10/23,0.5 days,Validé
+34567890123456,grace.lewis@example.com,30/01/23,1 days,Validé
+34567890123456,henry.thompson@example.com,19/09/24,3 days,En attente de validation
+34567890123456,isabella.white@example.com,05/10/23,0.5 days,Validé
+34567890123456,isabella.white@example.com,05/11/23,7 days,Validé
+34567890123456,olivia.scott@example.com,16/08/23,2 days,Annulé
+34567890123456,mia.evans@example.com,09/09/23,4 days,Validé
