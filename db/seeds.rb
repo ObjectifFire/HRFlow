@@ -3,7 +3,7 @@ require 'csv'
 EMPLOYEES_CSV = 'db/csv/users.csv'
 COMPANIES_CSV = 'db/csv/companies.csv'
 COMPANIES_EMPLOYEES_CSV = 'db/csv/companies_users.csv'
-ABSENCES_CSV = 'db/csv/absences.csv'
+LEAVE_REQUESTS_CSV = 'db/csv/absences.csv'
 
 puts "Importing employees..."
 employees = []
@@ -50,14 +50,14 @@ links.each_slice(999) do |batch|
   CompaniesEmployee.import batch, validate: false
 end
 
-puts "Importing absences..."
-absences = []
-CSV.foreach(ABSENCES_CSV, headers: true) do |row|
+puts "Importing leave_requests..."
+leave_requests = []
+CSV.foreach(LEAVE_REQUESTS_CSV, headers: true) do |row|
   employee = Employee.find_by(email: row['Email'])
   company = Company.find_by(siret: row['SIRET'])
   next unless employee && company
 
-  absences << Absence.new(
+  leave_requests << LeaveRequest.new(
     employee: employee,
     company: company,
     date: Date.strptime(row['Date'], '%d/%m/%y'),
@@ -66,8 +66,8 @@ CSV.foreach(ABSENCES_CSV, headers: true) do |row|
   )
 end
 
-absences.each_slice(999) do |batch|
-  Absence.import batch, validate: true
+leave_requests.each_slice(999) do |batch|
+  LeaveRequest.import batch, validate: true
 end
 
 puts "Seeding complete!"

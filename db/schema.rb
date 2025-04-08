@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_08_190808) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_08_192810) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -53,8 +53,22 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_08_190808) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "leave_requests", force: :cascade do |t|
+    t.bigint "company_id", null: false
+    t.bigint "employee_id", null: false
+    t.date "date"
+    t.string "duration"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_leave_requests_on_company_id"
+    t.index ["employee_id"], name: "index_leave_requests_on_employee_id"
+  end
+
   add_foreign_key "absences", "companies"
   add_foreign_key "absences", "employees"
   add_foreign_key "companies_employees", "companies"
   add_foreign_key "companies_employees", "employees"
+  add_foreign_key "leave_requests", "companies"
+  add_foreign_key "leave_requests", "employees"
 end

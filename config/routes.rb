@@ -6,10 +6,10 @@ Rails.application.routes.draw do
       end
 
       resources :employees, only: [:index, :show] do
-        resources :absences, only: [:index]
+        resources :leave_requests, only: [:index]
       end
 
-      resources :absences, only: [:index, :show, :create]
+      resources :leave_requests, only: [:index, :show, :create]
     end
   end
 end

@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :absence do
+  factory :leave_request do
     company { nil }
     employee { nil }
     date { "2025-04-08" }
