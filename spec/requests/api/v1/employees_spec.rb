@@ -16,7 +16,6 @@ RSpec.describe "API::V1::Employees", type: :request do
       expect(response).to have_http_status(:ok)
 
       json = JSON.parse(response.body)
-      p json
       expect(json.size).to eq(2)
 
       json.each do |employee|
@@ -86,4 +85,34 @@ RSpec.describe "API::V1::Employees", type: :request do
       expect(json["errors"]).to include("Email has already been taken")
     end
   end
+
+  describe "DELETE /api/v1/employees/:id" do
+    let!(:employee) { create(:employee) }
+  
+    it "deletes the employee successfully" do
+      expect {
+        delete "/api/v1/employees/#{employee.id}"
+      }.to change(Employee, :count).by(-1)
+  
+      expect(response).to have_http_status(:no_content)
+    end
+  
+    it "returns 404 if employee does not exist" do
+      delete "/api/v1/employees/999999"
+  
+      expect(response).to have_http_status(:not_found)
+      json = JSON.parse(response.body)
+      expect(json["error"]).to eq("Employee not found")
+    end
+  
+    it "returns 422 if deletion fails" do
+      allow_any_instance_of(Employee).to receive(:destroy).and_return(false)
+  
+      delete "/api/v1/employees/#{employee.id}"
+  
+      expect(response).to have_http_status(:unprocessable_entity)
+      json = JSON.parse(response.body)
+      expect(json["error"]).to eq("Failed to delete employee")
+    end
+  end  
 end
