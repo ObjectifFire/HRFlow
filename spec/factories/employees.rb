@@ -1,8 +1,8 @@
 FactoryBot.define do
   factory :employee do
-    email { "MyString" }
-    first_name { "MyString" }
-    last_name { "MyString" }
-    country { "MyString" }
+    first_name { Faker::Name.first_name }
+    last_name  { Faker::Name.last_name }
+    email      { Faker::Internet.unique.email }
+    country    { Faker::Address.country }
   end
 end

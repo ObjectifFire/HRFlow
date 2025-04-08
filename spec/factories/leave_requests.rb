@@ -1,9 +1,10 @@
 FactoryBot.define do
   factory :leave_request do
-    company { nil }
-    employee { nil }
-    date { "2025-04-08" }
-    duration { "MyString" }
-    status { "MyString" }
+    association :company
+    association :employee
+
+    date     { Faker::Date.forward(days: 10) } # date future
+    duration { [ "0.5 days", "1 day", "2 days" ].sample }
+    status   { "En attente de validation" }
   end
 end
