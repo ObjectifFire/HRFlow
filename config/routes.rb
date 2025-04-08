@@ -5,6 +5,7 @@ Rails.application.routes.draw do
 
       resources :employees, only: [:index, :create, :destroy]
 
+      get "/companies/:company_id/employees", to: "companies_employees#index"
       post   "/companies/:company_id/employees/:employee_id", to: "companies_employees#create"
       delete "/companies/:company_id/employees/:employee_id", to: "companies_employees#destroy"
 

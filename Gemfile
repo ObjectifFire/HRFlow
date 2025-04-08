@@ -45,6 +45,7 @@ group :development, :test do
   gem 'rubocop-rspec', require: false
   gem 'rspec-rails'
   gem 'factory_bot_rails'
+  gem 'faker'
 
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
   gem "brakeman", require: false
