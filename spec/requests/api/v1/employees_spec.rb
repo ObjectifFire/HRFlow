@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe "API::V1::Employees", type: :request do
   let(:first_user) { FactoryBot.create(:employee, first_name: "Alice", last_name: "Smith", email: "alice@example.com", country: "France") }
   let(:second_user) { FactoryBot.create(:employee, first_name: "Bob", last_name: "Jones", email: "bob@example.com", country: "USA") }
+  
   describe "GET /api/v1/employees" do
     before do
       first_user
