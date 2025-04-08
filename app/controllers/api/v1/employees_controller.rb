@@ -30,6 +30,24 @@ class Api::V1::EmployeesController < ApplicationController
       end
     end
 
+    def update_company
+      employee = Employee.find_by(id: params[:id])
+      return render json: { error: "Employee not found" }, status: :not_found unless employee
+    
+      company = Company.find_by(id: params[:company_id])
+      return render json: { error: "Target company not found" }, status: :not_found unless company
+    
+      employee.companies.each do |c|
+        employee.companies.destroy(c)
+      end
+    
+      employee.companies << company
+    
+      render json: {
+        message: "Employee reassigned to company #{company.name}"
+      }, status: :ok
+    end
+    
     private
 
     def set_company

@@ -110,4 +110,46 @@ RSpec.describe "API::V1::Employees", type: :request do
       expect(json["error"]).to eq("Failed to delete employee")
     end
   end
+
+  describe "PATCH /api/v1/employees/:id/company" do
+    let!(:employee) { FactoryBot.create(:employee) }
+    let!(:old_company) { FactoryBot.create(:company) }
+    let!(:new_company) { FactoryBot.create(:company) }
+  
+    before do
+      old_company.employees << employee
+    end
+  
+    context "when both employee and new company exist" do
+      it "reassigns the employee to the new company" do
+        patch "/api/v1/employees/#{employee.id}/company", params: { company_id: new_company.id }
+  
+        expect(response).to have_http_status(:ok)
+        json = JSON.parse(response.body)
+        expect(json["message"]).to include(new_company.name)
+  
+        expect(employee.reload.companies).to contain_exactly(new_company)
+      end
+    end
+  
+    context "when employee does not exist" do
+      it "returns 404" do
+        patch "/api/v1/employees/99999/company", params: { company_id: new_company.id }
+  
+        expect(response).to have_http_status(:not_found)
+        json = JSON.parse(response.body)
+        expect(json["error"]).to eq("Employee not found")
+      end
+    end
+  
+    context "when new company does not exist" do
+      it "returns 404" do
+        patch "/api/v1/employees/#{employee.id}/company", params: { company_id: 99999 }
+  
+        expect(response).to have_http_status(:not_found)
+        json = JSON.parse(response.body)
+        expect(json["error"]).to eq("Target company not found")
+      end
+    end
+  end  
 end
