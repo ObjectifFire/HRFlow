@@ -5,8 +5,7 @@ class Employee < ApplicationRecord
 
   validates :first_name, :last_name, :email, presence: true
   validates :email, uniqueness: true
-  
+
   scope :ordered_by_name, -> { order(:last_name, :first_name) }
   scope :with_companies, -> { includes(:companies) }
-
 end
