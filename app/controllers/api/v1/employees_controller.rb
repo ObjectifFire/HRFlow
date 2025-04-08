@@ -18,18 +18,18 @@ class Api::V1::EmployeesController < ApplicationController
 
     def destroy
       @employee = Employee.find_by(id: params[:id])
-    
+
       unless @employee
         return render json: { error: "Employee not found" }, status: :not_found
       end
-    
+
       if @employee.destroy
         head :no_content
       else
         render json: { error: "Failed to delete employee" }, status: :unprocessable_entity
       end
     end
-  
+
     private
 
     def set_company

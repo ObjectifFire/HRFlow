@@ -1,15 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe "API::V1::Employees", type: :request do
-  let(:first_user) { FactoryBot.create(:employee, first_name: "Alice", last_name: "Smith", email: "alice@example.com", country: "France") }
-  let(:second_user) { FactoryBot.create(:employee, first_name: "Bob", last_name: "Jones", email: "bob@example.com", country: "USA") }
+  let!(:first_user) { FactoryBot.create(:employee, first_name: "Alice", last_name: "Smith", email: "alice@example.com", country: "France") }
+  let!(:second_user) { FactoryBot.create(:employee, first_name: "Bob", last_name: "Jones", email: "bob@example.com", country: "USA") }
 
   describe "GET /api/v1/employees" do
-    before do
-      first_user
-      second_user
-     end
-
     it "returns a list of employees with expected fields" do
       get "/api/v1/employees"
 
@@ -87,32 +82,32 @@ RSpec.describe "API::V1::Employees", type: :request do
   end
 
   describe "DELETE /api/v1/employees/:id" do
-    let!(:employee) { create(:employee) }
-  
+    let!(:employee) { FactoryBot.create(:employee) }
+
     it "deletes the employee successfully" do
       expect {
         delete "/api/v1/employees/#{employee.id}"
       }.to change(Employee, :count).by(-1)
-  
+
       expect(response).to have_http_status(:no_content)
     end
-  
+
     it "returns 404 if employee does not exist" do
       delete "/api/v1/employees/999999"
-  
+
       expect(response).to have_http_status(:not_found)
       json = JSON.parse(response.body)
       expect(json["error"]).to eq("Employee not found")
     end
-  
+
     it "returns 422 if deletion fails" do
       allow_any_instance_of(Employee).to receive(:destroy).and_return(false)
-  
+
       delete "/api/v1/employees/#{employee.id}"
-  
+
       expect(response).to have_http_status(:unprocessable_entity)
       json = JSON.parse(response.body)
       expect(json["error"]).to eq("Failed to delete employee")
     end
-  end  
+  end
 end
