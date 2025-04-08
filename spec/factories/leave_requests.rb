@@ -4,7 +4,7 @@ FactoryBot.define do
     association :employee
 
     date     { Faker::Date.forward(days: 10) } # date future
-    duration { ["0.5 days", "1 day", "2 days"].sample }
+    duration { [ "0.5 days", "1 day", "2 days" ].sample }
     status   { "En attente de validation" }
   end
 end

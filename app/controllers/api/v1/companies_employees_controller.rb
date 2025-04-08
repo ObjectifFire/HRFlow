@@ -1,12 +1,12 @@
 class Api::V1::CompaniesEmployeesController < ApplicationController
   before_action :set_company
-  before_action :set_employee, only: [:create, :destroy]
+  before_action :set_employee, only: [ :create, :destroy ]
 
   def index
     employees = @company.employees.ordered_by_name
-  
+
     render json: employees.map { |employee|
-      employee.as_json(only: [:first_name, :last_name, :email, :country]).merge(
+      employee.as_json(only: [ :first_name, :last_name, :email, :country ]).merge(
         company_name: @company.name
       )
     }, status: :ok
@@ -20,7 +20,7 @@ class Api::V1::CompaniesEmployeesController < ApplicationController
       render json: { message: "Employee assigned" }, status: :created
     end
   end
-  
+
 
   def destroy
     if @company.employees.exists?(@employee.id)
@@ -35,11 +35,11 @@ class Api::V1::CompaniesEmployeesController < ApplicationController
 
   def set_company
     @company = Company.find_by(id: params[:company_id])
-    render json: { error: 'Company not found' }, status: :not_found unless @company
+    render json: { error: "Company not found" }, status: :not_found unless @company
   end
 
   def set_employee
     @employee = Employee.find_by(id: params[:employee_id])
-    render json: { error: 'Employee not found' }, status: :not_found unless @employee
+    render json: { error: "Employee not found" }, status: :not_found unless @employee
   end
 end
