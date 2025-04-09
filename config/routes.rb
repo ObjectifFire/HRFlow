@@ -1,35 +1,39 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
-      resources :companies, only: [:index]
 
-      resources :employees, only: [:index, :create, :destroy]
-      patch "/employees/:id/company", to: "employees#update_company" 
+      resources :companies, only: [:index], param: :siret do
+        get 'employees', to: 'companies_employees#index'
+        post 'employees/:employee_hr_id', to: 'companies_employees#create', as: :add_employee
+        delete 'employees/:employee_hr_id', to: 'companies_employees#destroy', as: :remove_employee
+      end
 
-      get    "/companies/:company_id/employees", to: "companies_employees#index"
-      post   "/companies/:company_id/employees/:employee_id", to: "companies_employees#create"
-      delete "/companies/:company_id/employees/:employee_id", to: "companies_employees#destroy"
+      resources :employees, only: [:index, :create], param: :employee_hr_id
+      delete '/employees/:employee_hr_id', to: 'employees#destroy'
+      patch  '/employees/:employee_hr_id/company', to: 'employees#update_company'
 
       resources :leave_requests, only: [:create] do
         collection do
-          get "pending", to: "leave_requests#pending"
+          get 'pending', to: 'leave_requests#pending'
         end
         member do
-          delete "cancel", to: "leave_requests#cancel"
+          delete 'cancel', to: 'leave_requests#cancel'
         end
       end
 
       namespace :admin do
-        resources :companies, only: [:index]
-        resources :employees, only: [:index, :create, :destroy]
-        patch "/employees/:id/company", to: "employees#update_company" 
+        resources :companies, only: [:index], param: :siret do
+          post 'employees/:employee_hr_id', to: 'companies_employees#create'
+          delete 'employees/:employee_hr_id', to: 'companies_employees#destroy'
+        end
 
-        post   "/companies/:company_id/employees/:employee_id", to: "companies_employees#create"
-        delete "/companies/:company_id/employees/:employee_id", to: "companies_employees#destroy"
-        delete "/companies/:company_id/employees/:employee_id", to: "companies_employees#destroy"
+        resources :employees, only: [:index, :create], param: :employee_hr_id
+        delete '/employees/:employee_hr_id', to: 'employees#destroy'
+        patch  '/employees/:employee_hr_id/company', to: 'employees#update_company'
 
         resources :leave_requests, only: [:create, :update]
       end
+
     end
   end
 end

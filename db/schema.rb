@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_08_193052) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_09_060419) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -39,6 +39,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_08_193052) do
     t.string "country"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "employee_hr_id"
+    t.index ["employee_hr_id"], name: "index_employees_on_employee_hr_id", unique: true
   end
 
   create_table "leave_requests", force: :cascade do |t|

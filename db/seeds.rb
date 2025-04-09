@@ -7,13 +7,17 @@ LEAVE_REQUESTS_CSV = 'db/csv/absences.csv'
 
 puts "Importing employees..."
 employees = []
+hr_id_sequence = 1
+
 CSV.foreach(EMPLOYEES_CSV, headers: true) do |row|
   employees << Employee.new(
     email: row['Email'],
     first_name: row['Prénom'],
     last_name: row['Nom'],
-    country: row['Pays']
+    country: row['Pays'],
+    employee_hr_id: "HR#{hr_id_sequence.to_s.rjust(5, '0')}" # HR00001, HR00002...
   )
+  hr_id_sequence += 1
 end
 
 employees.each_slice(999) do |batch|

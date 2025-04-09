@@ -1,61 +1,57 @@
-class Api::V1::EmployeesController < ApplicationController
-  before_action :set_company, only: [ :index ], if: -> { params[:company_id].present? }
+module Api
+  module V1
+    class EmployeesController < ApplicationController
+      before_action :set_company_by_siret, only: [:index], if: -> { params[:company_siret].present? }
+      before_action :set_employee_by_email, only: [:destroy, :update_company]
 
-    def index
-      employees = @company ? @company.employees : Employee.all
-      render json: employees.as_json(only: [ :email, :first_name, :last_name, :country ]), status: :ok
-    end
-
-    def create
-      employee = Employee.new(employee_params)
-
-      if employee.save
-        render json: employee.as_json(only: [ :first_name, :last_name, :email, :country ]), status: :created
-      else
-        render json: { errors: employee.errors.full_messages }, status: :unprocessable_entity
-      end
-    end
-
-    def destroy
-      @employee = Employee.find_by(id: params[:id])
-
-      unless @employee
-        return render json: { error: "Employee not found" }, status: :not_found
+      def index
+        employees = @company ? @company.employees : Employee.all
+        render json: employees.as_json(only: [:email, :first_name, :last_name, :country]), status: :ok
       end
 
-      if @employee.destroy
-        head :no_content
-      else
-        render json: { error: "Failed to delete employee" }, status: :unprocessable_entity
+      def create
+        employee = Employee.new(employee_params)
+
+        if employee.save
+          render json: employee.as_json(only: [:first_name, :last_name, :email, :country]), status: :created
+        else
+          render json: { errors: employee.errors.full_messages }, status: :unprocessable_entity
+        end
+      end
+
+      def destroy
+        if @employee.destroy
+          head :no_content
+        else
+          render json: { error: "Failed to delete employee" }, status: :unprocessable_entity
+        end
+      end
+
+      def update_company
+        company = Company.find_by(siret: params[:company_siret])
+        return render json: { error: "Target company not found" }, status: :not_found unless company
+
+        @employee.companies.clear
+        @employee.companies << company
+
+        render json: { message: "Employee reassigned to company #{company.name}" }, status: :ok
+      end
+
+      private
+
+      def set_company_by_siret
+        @company = Company.find_by(siret: params[:company_siret])
+        render json: { error: "Company not found" }, status: :not_found unless @company
+      end
+
+      def set_employee_by_email
+        @employee = Employee.find_by(email: params[:email])
+        render json: { error: "Employee not found" }, status: :not_found unless @employee
+      end
+
+      def employee_params
+        params.require(:employee).permit(:first_name, :last_name, :email, :country)
       end
     end
-
-    def update_company
-      employee = Employee.find_by(id: params[:id])
-      return render json: { error: "Employee not found" }, status: :not_found unless employee
-    
-      company = Company.find_by(id: params[:company_id])
-      return render json: { error: "Target company not found" }, status: :not_found unless company
-    
-      employee.companies.each do |c|
-        employee.companies.destroy(c)
-      end
-    
-      employee.companies << company
-    
-      render json: {
-        message: "Employee reassigned to company #{company.name}"
-      }, status: :ok
-    end
-    
-    private
-
-    def set_company
-      @company = Company.find_by(id: params[:company_id])
-      render json: { error: "Company not found" }, status: :not_found unless @company
-    end
-
-    def employee_params
-      params.require(:employee).permit(:first_name, :last_name, :email, :country)
-    end
+  end
 end
