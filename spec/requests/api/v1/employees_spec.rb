@@ -1,8 +1,23 @@
 require 'rails_helper'
 
 RSpec.describe "API::V1::Employees", type: :request do
-  let!(:first_user) { FactoryBot.create(:employee, first_name: "Alice", last_name: "Smith", email: "alice@example.com", country: "France") }
-  let!(:second_user) { FactoryBot.create(:employee, first_name: "Bob", last_name: "Jones", email: "bob@example.com", country: "USA") }
+  let!(:first_user) do
+    FactoryBot.create(:employee,
+      first_name: "Alice",
+      last_name: "Smith",
+      email: "alice@example.com",
+      country: "France"
+    )
+  end
+
+  let!(:second_user) do
+    FactoryBot.create(:employee,
+      first_name: "Bob",
+      last_name: "Jones",
+      email: "bob@example.com",
+      country: "USA"
+    )
+  end
 
   describe "GET /api/v1/employees" do
     it "returns a list of employees with expected fields" do
@@ -81,19 +96,19 @@ RSpec.describe "API::V1::Employees", type: :request do
     end
   end
 
-  describe "DELETE /api/v1/employees/:id" do
+  describe "DELETE /api/v1/employees/:employee_hr_id" do
     let!(:employee) { FactoryBot.create(:employee) }
 
     it "deletes the employee successfully" do
       expect {
-        delete "/api/v1/employees/#{employee.id}"
+        delete "/api/v1/employees/#{employee.employee_hr_id}"
       }.to change(Employee, :count).by(-1)
 
       expect(response).to have_http_status(:no_content)
     end
 
     it "returns 404 if employee does not exist" do
-      delete "/api/v1/employees/999999"
+      delete "/api/v1/employees/FAKE-HR-ID"
 
       expect(response).to have_http_status(:not_found)
       json = JSON.parse(response.body)
@@ -103,7 +118,7 @@ RSpec.describe "API::V1::Employees", type: :request do
     it "returns 422 if deletion fails" do
       allow_any_instance_of(Employee).to receive(:destroy).and_return(false)
 
-      delete "/api/v1/employees/#{employee.id}"
+      delete "/api/v1/employees/#{employee.employee_hr_id}"
 
       expect(response).to have_http_status(:unprocessable_entity)
       json = JSON.parse(response.body)
@@ -111,45 +126,45 @@ RSpec.describe "API::V1::Employees", type: :request do
     end
   end
 
-  describe "PATCH /api/v1/employees/:id/company" do
+  describe "PATCH /api/v1/employees/:employee_hr_id/company" do
     let!(:employee) { FactoryBot.create(:employee) }
     let!(:old_company) { FactoryBot.create(:company) }
     let!(:new_company) { FactoryBot.create(:company) }
-  
+
     before do
       old_company.employees << employee
     end
-  
+
     context "when both employee and new company exist" do
       it "reassigns the employee to the new company" do
-        patch "/api/v1/employees/#{employee.id}/company", params: { company_id: new_company.id }
-  
+        patch "/api/v1/employees/#{employee.employee_hr_id}/company", params: { company_siret: new_company.siret }
+
         expect(response).to have_http_status(:ok)
         json = JSON.parse(response.body)
         expect(json["message"]).to include(new_company.name)
-  
+
         expect(employee.reload.companies).to contain_exactly(new_company)
       end
     end
-  
+
     context "when employee does not exist" do
       it "returns 404" do
-        patch "/api/v1/employees/99999/company", params: { company_id: new_company.id }
-  
+        patch "/api/v1/employees/FAKE-HR-ID/company", params: { company_siret: new_company.siret }
+
         expect(response).to have_http_status(:not_found)
         json = JSON.parse(response.body)
         expect(json["error"]).to eq("Employee not found")
       end
     end
-  
+
     context "when new company does not exist" do
       it "returns 404" do
-        patch "/api/v1/employees/#{employee.id}/company", params: { company_id: 99999 }
-  
+        patch "/api/v1/employees/#{employee.employee_hr_id}/company", params: { company_siret: "FAKE-SIRET" }
+
         expect(response).to have_http_status(:not_found)
         json = JSON.parse(response.body)
         expect(json["error"]).to eq("Target company not found")
       end
     end
-  end  
+  end
 end

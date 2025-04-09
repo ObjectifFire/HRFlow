@@ -2,7 +2,7 @@ module Api
   module V1
     class EmployeesController < ApplicationController
       before_action :set_company_by_siret, only: [:index], if: -> { params[:company_siret].present? }
-      before_action :set_employee_by_email, only: [:destroy, :update_company]
+      before_action :set_employee_by_hr_id, only: [:destroy, :update_company]
 
       def index
         employees = @company ? @company.employees : Employee.all
@@ -44,8 +44,8 @@ module Api
         render json: { error: "Company not found" }, status: :not_found unless @company
       end
 
-      def set_employee_by_email
-        @employee = Employee.find_by(email: params[:email])
+      def set_employee_by_hr_id
+        @employee = Employee.find_by(employee_hr_id: params[:employee_hr_id])
         render json: { error: "Employee not found" }, status: :not_found unless @employee
       end
 
