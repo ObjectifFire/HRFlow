@@ -6,7 +6,7 @@ module Api
 
       def index
         employees = @company ? @company.employees : Employee.all
-        render json: employees.as_json(only: [ :email, :first_name, :last_name, :country ]), status: :ok
+        render json: employees.as_json(only: [ :email, :first_name, :last_name, :country, :employee_hr_id ]), status: :ok
       end
 
       def create
