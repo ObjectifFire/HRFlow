@@ -1,19 +1,19 @@
 module Api
   module V1
     class EmployeesController < ApplicationController
-      before_action :set_company_by_siret, only: [:index], if: -> { params[:company_siret].present? }
-      before_action :set_employee_by_hr_id, only: [:destroy, :update_company]
+      before_action :set_company_by_siret, only: [ :index ], if: -> { params[:company_siret].present? }
+      before_action :set_employee_by_hr_id, only: [ :destroy, :update_company ]
 
       def index
         employees = @company ? @company.employees : Employee.all
-        render json: employees.as_json(only: [:email, :first_name, :last_name, :country]), status: :ok
+        render json: employees.as_json(only: [ :email, :first_name, :last_name, :country ]), status: :ok
       end
 
       def create
         employee = Employee.new(employee_params)
 
         if employee.save
-          render json: employee.as_json(only: [:first_name, :last_name, :email, :country]), status: :created
+          render json: employee.as_json(only: [ :first_name, :last_name, :email, :country ]), status: :created
         else
           render json: { errors: employee.errors.full_messages }, status: :unprocessable_entity
         end

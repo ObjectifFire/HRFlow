@@ -7,7 +7,7 @@ RSpec.describe "API::V1::CompaniesEmployees", type: :request do
     let!(:employee2) { FactoryBot.create(:employee) }
 
     before do
-      company.employees << [employee1, employee2]
+      company.employees << [ employee1, employee2 ]
     end
 
     it "returns all employees assigned to the company with company name included" do
