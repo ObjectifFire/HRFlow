@@ -10,8 +10,7 @@ class Api::V1::LeaveRequestsController < ApplicationController
       employee: @employee,
       company: company,
       date: Date.parse(params[:date]),
-      duration: params[:duration],
-      status: "En attente de validation"
+      duration: params[:duration]
     )
 
     if leave_request.save
@@ -23,18 +22,18 @@ class Api::V1::LeaveRequestsController < ApplicationController
 
   def pending
     leave_requests = LeaveRequest
-      .where(status: "En attente de validation")
+      .where(status: "pending")
       .where("date >= ?", Date.today)
 
     render json: leave_requests, status: :ok
   end
 
   def cancel
-    if @leave_request.status != "En attente de validation"
+    if @leave_request.status != "pending"
       return render json: { error: "Only pending requests can be cancelled" }, status: :unprocessable_entity
     end
 
-    @leave_request.update(status: "Annulé")
+    @leave_request.update!(status: "Annulé")
     render json: { message: "Leave request cancelled" }, status: :ok
   end
 
