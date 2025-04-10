@@ -29,7 +29,7 @@ RSpec.describe "API::V1::Employees", type: :request do
       expect(json.size).to eq(2)
 
       json.each do |employee|
-        expect(employee.keys).to contain_exactly("first_name", "last_name", "email", "country")
+        expect(employee.keys).to contain_exactly("first_name", "last_name", "email", "country", "employee_hr_id")
       end
     end
   end
