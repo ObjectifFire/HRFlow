@@ -1,5 +1,5 @@
 class Company < ApplicationRecord
-  has_many :companies_employees
+  has_many :companies_employees, dependent: :destroy
   has_many :employees, through: :companies_employees
   has_many :leave_requests
 
