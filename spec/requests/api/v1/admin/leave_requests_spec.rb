@@ -9,7 +9,8 @@ RSpec.describe "API::V1::LeaveRequests", type: :request do
       {
         employee_hr_id: employee.employee_hr_id,
         company_siret: company.siret,
-        date: Date.today.to_s,
+        
+        date: (Date.today + 1).to_s,
         duration: "1 day"
       }
     end
@@ -45,18 +46,17 @@ RSpec.describe "API::V1::LeaveRequests", type: :request do
 
   describe "GET /api/v1/leave_requests/pending" do
     before do
-      FactoryBot.create(:leave_request, date: Date.today + 1, employee: employee, company: company)
-      # FactoryBot.create(:leave_request, status: "Annulé", date: Date.today + 1, employee: employee, company: company)
-      FactoryBot.create(:leave_request, date: Date.today - 2, employee: employee, company: company)
+      FactoryBot.create(:leave_request, date: Date.today + 1, duration: "3 days", employee: employee, company: company)
+      FactoryBot.create(:leave_request, date: Date.today + 2, duration: "6 days" ,employee: employee, company: company)
     end
 
-    it "returns only future pending leave requests" do
+    it "returns pending leave requests" do
       get "/api/v1/leave_requests/pending"
 
       expect(response).to have_http_status(:ok)
       json = JSON.parse(response.body)
 
-      expect(json.size).to eq(1)
+      expect(json.size).to eq(2)
       expect(json.first["status"]).to eq("pending")
     end
   end
