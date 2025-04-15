@@ -18,7 +18,6 @@ RSpec.describe "API::V1::LeaveRequests", type: :request do
         post "/api/v1/leave_requests", params: valid_params
       }.to change(LeaveRequest, :count).by(1)
 
-
       expect(response).to have_http_status(:created)
       json = JSON.parse(response.body)
       expect(json["status"]).to eq("pending")

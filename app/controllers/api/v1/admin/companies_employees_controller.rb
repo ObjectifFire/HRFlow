@@ -16,7 +16,7 @@ module Api
         end
 
         def create
-          if @employee.companies.exists?
+          if @employee.company.present?
             render json: { error: "Employee is already assigned to a company" }, status: :unprocessable_entity
           else
             @company.employees << @employee
