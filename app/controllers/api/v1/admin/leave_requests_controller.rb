@@ -3,9 +3,6 @@ class Api::V1::Admin::LeaveRequestsController < ApplicationController
   before_action :set_leave_request, only: [ :cancel ]
 
   def create
-
-    p "LALALA"
-    p current_admin
     company = Company.find_by(siret: params[:company_siret])
     return render json: { error: "Company not found" }, status: :not_found unless company
 
@@ -24,7 +21,6 @@ class Api::V1::Admin::LeaveRequestsController < ApplicationController
   end
 
   def pending
-
     render json: LeaveRequest.pending_requests, status: :ok
   end
 

@@ -14,8 +14,8 @@ class LeaveRequest < ApplicationRecord
     where("date >= ?", Date.today)
   }
 
-  LEAVE_REQUEST_MAX_DURATION_IN_DAYS = [45].freeze
-  
+  LEAVE_REQUEST_MAX_DURATION_IN_DAYS = [ 45 ].freeze
+
   def calculate_end_date
     date + duration[/\d+/].to_i.days
   end
@@ -35,7 +35,6 @@ class LeaveRequest < ApplicationRecord
   end
 
   def check_status
-    
   end
 
   def set_status

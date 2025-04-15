@@ -9,7 +9,7 @@ RSpec.describe "API::V1::LeaveRequests", type: :request do
       {
         employee_hr_id: employee.employee_hr_id,
         company_siret: company.siret,
-        
+
         date: (Date.today + 1).to_s,
         duration: "1 day"
       }
@@ -47,7 +47,7 @@ RSpec.describe "API::V1::LeaveRequests", type: :request do
   describe "GET /api/v1/leave_requests/pending" do
     before do
       FactoryBot.create(:leave_request, date: Date.today + 1, duration: "3 days", employee: employee, company: company)
-      FactoryBot.create(:leave_request, date: Date.today + 2, duration: "6 days" ,employee: employee, company: company)
+      FactoryBot.create(:leave_request, date: Date.today + 2, duration: "6 days", employee: employee, company: company)
     end
 
     it "returns pending leave requests" do
