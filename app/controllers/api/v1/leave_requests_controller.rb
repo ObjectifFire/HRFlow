@@ -3,7 +3,7 @@ class Api::V1::LeaveRequestsController < ApplicationController
   before_action :set_leave_request, only: [ :cancel ]
 
   def create
-    company = Company.find_by(siret: params[:company_siret])
+    company = @employee.company
     return render json: { error: "Company not found" }, status: :not_found unless company
 
     leave_request = LeaveRequest.new(

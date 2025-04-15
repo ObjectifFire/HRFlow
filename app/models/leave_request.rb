@@ -13,7 +13,7 @@ class LeaveRequest < ApplicationRecord
     where(status: "pending")
     where("date >= ?", Date.today)
   }
-  
+
   attr_accessor :skip_status_callback
 
   LEAVE_REQUEST_MAX_DURATION_IN_DAYS = [ 45 ].freeze

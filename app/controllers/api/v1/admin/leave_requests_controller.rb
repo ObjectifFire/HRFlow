@@ -3,7 +3,7 @@ class Api::V1::Admin::LeaveRequestsController < ApplicationController
   before_action :set_leave_request, only: [ :cancel ]
 
   def create
-    company = Company.find_by(siret: params[:company_siret])
+    company = @employee.company
     return render json: { error: "Company not found" }, status: :not_found unless company
 
     leave_request = LeaveRequest.new(
@@ -15,7 +15,7 @@ class Api::V1::Admin::LeaveRequestsController < ApplicationController
     )
 
     leave_request.skip_status_callback = true
-    
+
     if leave_request.save
       render json: leave_request, status: :created
     else
@@ -28,7 +28,7 @@ class Api::V1::Admin::LeaveRequestsController < ApplicationController
 
     render json: leave_request, status: :updated
   end
-  
+
   private
 
   def set_employee_by_hr_id

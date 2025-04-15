@@ -2,13 +2,12 @@ require 'rails_helper'
 
 RSpec.describe "API::V1::LeaveRequests", type: :request do
   let!(:employee) { FactoryBot.create(:employee) }
-  let!(:company) { FactoryBot.create(:company) }
+  let!(:company) { FactoryBot.create(:company, :with_employees) }
 
   describe "POST /api/v1/leave_requests" do
     let(:valid_params) do
       {
-        employee_hr_id: employee.employee_hr_id,
-        company_siret: company.siret,
+        employee_hr_id: company.employees.first.employee_hr_id,
         date: (Date.today + 1).to_s,
         duration: "1 day"
       }
@@ -19,13 +18,21 @@ RSpec.describe "API::V1::LeaveRequests", type: :request do
         post "/api/v1/leave_requests", params: valid_params
       }.to change(LeaveRequest, :count).by(1)
 
+
       expect(response).to have_http_status(:created)
       json = JSON.parse(response.body)
       expect(json["status"]).to eq("pending")
     end
 
+    let(:invalid_params) do
+      {
+        employee_hr_id: employee.employee_hr_id,
+        date: (Date.today + 1).to_s,
+        duration: "1 day"
+      }
+    end
+
     it "returns 404 if company not found" do
-      invalid_params = valid_params.merge(company_siret: "FAKE")
       post "/api/v1/leave_requests", params: invalid_params
 
       expect(response).to have_http_status(:not_found)
