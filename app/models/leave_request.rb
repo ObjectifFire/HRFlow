@@ -3,8 +3,7 @@ class LeaveRequest < ApplicationRecord
   belongs_to :employee
 
   validates :duration, :date, presence: :true
-  validate :date_range_check
- # validate :can_be_deleted?, on: :delete
+  validate :check_start_date
 
   before_update :check_status
   before_create :check_max_duration
@@ -21,19 +20,18 @@ class LeaveRequest < ApplicationRecord
     date + duration[/\d+/].to_i.days
   end
 
-
-
   private
 
   def check_max_duration
-   return if duration[/\d+/].to_i < LEAVE_REQUEST_MAX_DURATION_IN_DAYS
+   return if duration[/\d+/].to_i < LEAVE_REQUEST_MAX_DURATION_IN_DAYS[0]
 
    errors.add(:duration, "Must be #{LEAVE_REQUEST_MAX_DURATION_IN_DAYS} max.")
   end
-  def date_range_check
+
+  def check_start_date
      return unless date < Time.current
 
-     errors.add(:date, "Must be > to today date")
+     errors.add(:date, "has to start after today")
   end
 
   def check_status
