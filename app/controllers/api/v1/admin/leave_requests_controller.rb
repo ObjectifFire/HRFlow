@@ -10,9 +10,12 @@ class Api::V1::Admin::LeaveRequestsController < ApplicationController
       employee: @employee,
       company: company,
       date: Date.parse(params[:date]),
-      duration: params[:duration]
+      duration: params[:duration],
+      status: params[:status]
     )
 
+    leave_request.skip_status_callback = true
+    
     if leave_request.save
       render json: leave_request, status: :created
     else
@@ -20,19 +23,12 @@ class Api::V1::Admin::LeaveRequestsController < ApplicationController
     end
   end
 
-  def pending
-    render json: LeaveRequest.pending_requests, status: :ok
+  def update
+    @leave_request.update!(status: params[:status])
+
+    render json: leave_request, status: :updated
   end
-
-  def cancel
-    if @leave_request.status != "pending"
-      return render json: { error: "Only pending requests can be cancelled" }, status: :unprocessable_entity
-    end
-
-    @leave_request.update!(status: "Annulé")
-    render json: { message: "Leave request cancelled" }, status: :ok
-  end
-
+  
   private
 
   def set_employee_by_hr_id

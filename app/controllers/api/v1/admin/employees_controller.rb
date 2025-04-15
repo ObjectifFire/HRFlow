@@ -6,7 +6,7 @@ module Api
         before_action :set_employee_by_hr_id, only: [ :destroy, :update_company ]
 
         def index
-          employees = @company ? @company.employees : Employee.all
+          employees = @company ? @company.includes(:employees).employees : Employee.limit(12)
           render json: employees.as_json(only: [ :email, :first_name, :last_name, :country, :employee_hr_id ]), status: :ok
         end
 

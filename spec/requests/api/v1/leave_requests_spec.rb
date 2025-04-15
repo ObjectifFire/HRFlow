@@ -63,13 +63,13 @@ RSpec.describe "API::V1::LeaveRequests", type: :request do
   describe "PATCH /api/v1/leave_requests/:id/cancel" do
     let!(:leave_request) { FactoryBot.create(:leave_request, employee: employee, company: company) }
 
-    it "cancels a pending leave request" do
+    it "does not cancels a pending leave request" do
       patch "/api/v1/leave_requests/#{leave_request.id}/cancel", params: { employee_hr_id: employee.employee_hr_id }
 
       expect(response).to have_http_status(:ok)
       json = JSON.parse(response.body)
       expect(json["message"]).to eq("Leave request cancelled")
-      expect(leave_request.reload.status).to eq("Annulé")
+      expect(leave_request.reload.status).to eq("canceled")
     end
 
     it "returns 404 if leave request not found" do

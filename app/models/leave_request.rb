@@ -7,17 +7,23 @@ class LeaveRequest < ApplicationRecord
 
   before_update :check_status
   before_create :check_max_duration
-  after_create :set_status
+  after_create :set_status, unless: :skip_status_callback
 
   scope :pending_requests, -> {
     where(status: "pending")
     where("date >= ?", Date.today)
   }
+  
+  attr_accessor :skip_status_callback
 
   LEAVE_REQUEST_MAX_DURATION_IN_DAYS = [ 45 ].freeze
 
   def calculate_end_date
     date + duration[/\d+/].to_i.days
+  end
+
+  def cancelable?
+    status == "pending" && date > Time.current
   end
 
   private
