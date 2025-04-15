@@ -5,5 +5,9 @@ FactoryBot.define do
     sequence(:email) { |n| "user#{n}@gmail.com" }
     sequence(:employee_hr_id) { |n| "HR#{n.to_s.rjust(5, '0')}" } # HR00001, HR00002...
     country    { Faker::Address.country }
+
+    trait :with_company do
+     company { association(:company) }
+    end
   end
 end

@@ -3,15 +3,18 @@ class Api::V1::Admin::LeaveRequestsController < ApplicationController
   before_action :set_leave_request, only: [ :cancel ]
 
   def create
-    company = Company.find_by(siret: params[:company_siret])
+    company = @employee.company
     return render json: { error: "Company not found" }, status: :not_found unless company
 
     leave_request = LeaveRequest.new(
       employee: @employee,
       company: company,
       date: Date.parse(params[:date]),
-      duration: params[:duration]
+      duration: params[:duration],
+      status: params[:status]
     )
+
+    leave_request.skip_status_callback = true
 
     if leave_request.save
       render json: leave_request, status: :created
@@ -20,21 +23,10 @@ class Api::V1::Admin::LeaveRequestsController < ApplicationController
     end
   end
 
-  def pending
-    leave_requests = LeaveRequest
-      .where(status: "pending")
-      .where("date >= ?", Date.today)
+  def update
+    @leave_request.update!(status: params[:status])
 
-    render json: leave_requests, status: :ok
-  end
-
-  def cancel
-    if @leave_request.status != "pending"
-      return render json: { error: "Only pending requests can be cancelled" }, status: :unprocessable_entity
-    end
-
-    @leave_request.update!(status: "Annulé")
-    render json: { message: "Leave request cancelled" }, status: :ok
+    render json: leave_request, status: :updated
   end
 
   private

@@ -7,7 +7,7 @@ RSpec.describe "Api::V1::Admin::Companies", type: :request do
     before { company }
 
     it "returns only name, siret, and country" do
-      get "/api/v1/companies"
+      get "/api/v1/admin/companies"
       expect(response).to have_http_status(:ok)
 
       json = JSON.parse(response.body)

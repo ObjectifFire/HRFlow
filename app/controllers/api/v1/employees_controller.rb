@@ -30,13 +30,16 @@ module Api
       def update_company
         company = Company.find_by(siret: params[:company_siret])
         return render json: { error: "Target company not found" }, status: :not_found unless company
-
-        @employee.companies.clear
-        @employee.companies << company
-
+      
+        if @employee.companies_employee
+          @employee.companies_employee.update(company: company)
+        else
+          CompaniesEmployee.create!(employee: @employee, company: company)
+        end
+      
         render json: { message: "Employee reassigned to company #{company.name}" }, status: :ok
       end
-
+      
       private
 
       def set_company_by_siret

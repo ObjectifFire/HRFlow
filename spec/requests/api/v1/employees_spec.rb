@@ -143,7 +143,7 @@ RSpec.describe "API::V1::Employees", type: :request do
         json = JSON.parse(response.body)
         expect(json["message"]).to include(new_company.name)
 
-        expect(employee.reload.companies).to contain_exactly(new_company)
+        expect(employee.reload.company).to eq(new_company)
       end
     end
 

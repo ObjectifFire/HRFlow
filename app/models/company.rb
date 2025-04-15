@@ -4,6 +4,6 @@ class Company < ApplicationRecord
   has_many :leave_requests
 
   scope :public_info, -> { select(:name, :siret, :country) }
-  scope :admin_info, -> { select(:name, :siret, :country, :revenue_2024) }
 
+  scope :admin_info, -> { select(:name, :siret, :country, :revenue_2024) }
 end

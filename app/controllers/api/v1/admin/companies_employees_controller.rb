@@ -6,7 +6,7 @@ module Api
         before_action :set_employee_by_employee_hr_id, only: [ :create, :destroy ]
 
         def index
-          employees = @company.employees.ordered_by_name
+          employees = @company.includes(:employees).employees.ordered_by_name
 
           render json: employees.map { |employee|
             employee.as_json(only: [ :first_name, :last_name, :email, :country, :employee_hr_id ]).merge(
@@ -16,7 +16,7 @@ module Api
         end
 
         def create
-          if @employee.companies.exists?
+          if @employee.company.present?
             render json: { error: "Employee is already assigned to a company" }, status: :unprocessable_entity
           else
             @company.employees << @employee
