@@ -21,11 +21,7 @@ class Api::V1::LeaveRequestsController < ApplicationController
   end
 
   def pending
-    leave_requests = LeaveRequest
-      .where(status: "pending")
-      .where("date >= ?", Date.today)
-
-    render json: leave_requests, status: :ok
+    render json: LeaveRequest.pending_requests, status: :ok
   end
 
   def cancel

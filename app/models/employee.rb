@@ -1,7 +1,7 @@
 class Employee < ApplicationRecord
   has_many :companies_employees, dependent: :destroy
   has_many :companies, through: :companies_employees
-  has_many :leave_requests
+  has_many :leave_requests, dependent: :destroy
 
   before_validation :set_hr_id, on: :create
 
