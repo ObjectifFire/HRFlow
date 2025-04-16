@@ -15,7 +15,7 @@ class LeaveRequest < ApplicationRecord
 
   attr_accessor :skip_status_callback
 
-  REQUESTS_STATUS = ['pending', 'validated', 'cancel'].freeze
+  REQUESTS_STATUS = %w(pending validated cancel).freeze
 
   LEAVE_REQUEST_MAX_DURATION_IN_DAYS = [ 45 ].freeze
 
