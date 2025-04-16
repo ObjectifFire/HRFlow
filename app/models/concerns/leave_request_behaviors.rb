@@ -3,7 +3,7 @@ module LeaveRequestBehaviors
 
   included do
     validate :check_start_date, unless: :skip_status_callback
-    validate :check_max_duration, unless: :skip_status_callback
+    validate :check_max_duration
     validate :check_max_start_date, unless: :skip_status_callback
 
     after_create :set_status, unless: :skip_status_callback
