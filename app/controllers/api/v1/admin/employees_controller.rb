@@ -11,9 +11,10 @@ module Api
 
         def create
           employee = Employee.new(employee_params)
+          employee.admin_context = true
 
           if employee.save
-            render json: employee.as_json(only: [ :first_name, :last_name, :email, :country ]), status: :created
+            render json: employee.compact_json, status: :created
           else
             render json: { errors: employee.errors.full_messages }, status: :unprocessable_entity
           end
