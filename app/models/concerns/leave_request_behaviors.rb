@@ -5,6 +5,7 @@ module LeaveRequestBehaviors
     validate :check_start_date
     validate :check_max_duration
     validate :check_max_start_date
+    
     after_create :set_status, unless: :skip_status_callback
 
     attr_accessor :skip_status_callback

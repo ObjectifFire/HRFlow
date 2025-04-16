@@ -1,24 +1,46 @@
-# README
+📋 Project Requirements (Summary)
+The HR department is migrating to a new system using APIs and has provided several CSV files to seed the database:
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+companies.csv: List of companies
 
-Things you may want to cover:
+users.csv: List of employees
 
-* Ruby version
+companies_users.csv: Company-employee assignments
 
-* System dependencies
+absences.csv: Employee leave requests
 
-* Configuration
+You are free to design and structure the data in the way you think is best to meet HR’s needs.
 
-* Database creation
+🎯 Goals
+Develop a Ruby or Rails application that can:
 
-* Database initialization
+Import data from the CSV files into the database
 
-* How to run the test suite
+Expose a public API allowing:
 
-* Services (job queues, cache servers, search engines, etc.)
+List companies (without revenue info)
 
-* Deployment instructions
+List/add/delete employees
 
-* ...
+Required fields: first_name, last_name, email (email must be unique)
+
+Assign or unassign employees to companies
+
+Employees can submit leave requests (create/cancel)
+
+Leave requests are created with status "pending"
+
+Only future, "pending" requests can be canceled
+
+Expose an admin API allowing:
+
+List companies including revenue info
+
+List/add/delete employees (only email is required and must be unique)
+
+Assign/unassign employees to companies
+
+Submit or update any leave request
+
+Admin can set any status (pending, validated, cancel) regardless of the date
+
