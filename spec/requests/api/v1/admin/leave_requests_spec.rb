@@ -16,7 +16,7 @@ RSpec.describe "API::V1::Admin::LeaveRequests", type: :request do
 
     it "creates a leave request successfully" do
       post "/api/v1/admin/leave_requests", params: valid_params
-      
+
       expect(response).to have_http_status(:created)
       json = JSON.parse(response.body)
       expect(json["status"]).to eq("validated")
@@ -45,7 +45,7 @@ RSpec.describe "API::V1::Admin::LeaveRequests", type: :request do
     let!(:leave_request) { FactoryBot.create(:leave_request, date: (Date.today + 3).to_s, company: company) }
 
     it "cancel a leave request" do
-      patch "/api/v1/admin/leave_requests/#{leave_request.id}", params: { status: "cancel"}
+      patch "/api/v1/admin/leave_requests/#{leave_request.id}", params: { status: "cancel" }
 
       expect(response).to have_http_status(:ok)
       json = JSON.parse(response.body)
@@ -54,7 +54,7 @@ RSpec.describe "API::V1::Admin::LeaveRequests", type: :request do
     end
 
     it "validates a leave request" do
-      patch "/api/v1/admin/leave_requests/#{leave_request.id}", params: { status: "validated"}
+      patch "/api/v1/admin/leave_requests/#{leave_request.id}", params: { status: "validated" }
 
       expect(response).to have_http_status(:ok)
       json = JSON.parse(response.body)
