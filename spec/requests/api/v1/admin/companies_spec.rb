@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe "Api::V1::Admin::Companies", type: :request do
-  let(:company) { FactoryBot.build(:company) }
+  let(:company) { FactoryBot.create(:company) }
 
   describe "GET /index" do
     before { company }
@@ -12,7 +12,7 @@ RSpec.describe "Api::V1::Admin::Companies", type: :request do
 
       json = JSON.parse(response.body)
       expect(json).to all(include("name", "siret", "country", "revenue_2024"))
-      expect(json.include?("revenue_2024")).to be_falsy
+      expect(json.first["revenue_2024"]).to eq(company.revenue_2024)
     end
   end
 end
