@@ -1,3 +1,8 @@
+SETUP:
+bundle install
+rails db:create db:migrate db:seed
+rails server
+
 📋 Project Requirements (Summary)
 The HR department is migrating to a new system using APIs and has provided several CSV files to seed the database:
 
