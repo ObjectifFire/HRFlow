@@ -14,7 +14,7 @@ module LeaveRequestBehaviors
     }
   end
 
-  REQUESTS_STATUS = %w(pending validated cancel).freeze
+  REQUESTS_STATUS = %w[pending validated cancel].freeze
   LEAVE_REQUEST_MAX_DURATION_IN_DAYS = [ 45 ].freeze
 
   def calculate_end_date
