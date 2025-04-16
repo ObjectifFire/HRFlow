@@ -4,17 +4,8 @@ rails db:create db:migrate db:seed
 rails server
 
 📋 Project Requirements (Summary)
-The HR department is migrating to a new system using APIs and has provided several CSV files to seed the database:
+The HR department is migrating to a new system using APIs
 
-companies.csv: List of companies
-
-users.csv: List of employees
-
-companies_users.csv: Company-employee assignments
-
-absences.csv: Employee leave requests
-
-You are free to design and structure the data in the way you think is best to meet HR’s needs.
 
 🎯 Goals
 Develop a Ruby or Rails application that can:
