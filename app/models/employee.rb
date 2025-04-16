@@ -9,7 +9,6 @@ class Employee < ApplicationRecord
   validates :email, :employee_hr_id, uniqueness: true
 
   scope :ordered_by_name, -> { order(:last_name, :first_name) }
-  scope :with_companies, -> { includes(:companies) }
 
   private
 
