@@ -20,7 +20,7 @@ RSpec.describe "API::V1::Admin::Employees", type: :request do
     let(:minimal_valid_params) do
       {
         employee: {
-          email: "admin@onlyemail.com"
+          email: "mytest@mail.com"
         }
       }
     end
@@ -41,7 +41,7 @@ RSpec.describe "API::V1::Admin::Employees", type: :request do
 
       expect(response).to have_http_status(:created)
       json = JSON.parse(response.body)
-      expect(json["email"]).to eq("admin@onlyemail.com")
+      expect(json["email"]).to eq("mytest@mail.com")
     end
 
     it "returns 422 when email is missing" do
