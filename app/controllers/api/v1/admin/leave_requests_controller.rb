@@ -1,6 +1,6 @@
 class Api::V1::Admin::LeaveRequestsController < ApplicationController
   before_action :set_employee_by_hr_id, only: [ :create ]
-  before_action :set_leave_request, only: [ :cancel ]
+  before_action :set_leave_request, only: [ :update ]
 
   def create
     company = @employee.company
@@ -26,7 +26,7 @@ class Api::V1::Admin::LeaveRequestsController < ApplicationController
   def update
     @leave_request.update!(status: params[:status])
 
-    render json: leave_request, status: :updated
+    render json: { message: "Leave request status #{params[:status]}" }, status: :ok
   end
 
   private
