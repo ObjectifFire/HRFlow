@@ -3,7 +3,8 @@ module LeaveRequestBehaviors
 
   included do
     validate :check_start_date
-    before_create :check_max_duration
+    validate :check_max_duration
+    validate :check_max_end_date
     after_create :set_status, unless: :skip_status_callback
 
     attr_accessor :skip_status_callback
@@ -41,6 +42,10 @@ module LeaveRequestBehaviors
     return unless date < Time.current
 
     errors.add(:date, "has to start after today")
+  end
+
+  def check_max_end_date
+    calculate_end_date
   end
 
   def set_status

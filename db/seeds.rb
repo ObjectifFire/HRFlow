@@ -55,23 +55,21 @@ links.each_slice(999) do |batch|
 end
 
 puts "Importing leave_requests..."
-leave_requests = []
 CSV.foreach(LEAVE_REQUESTS_CSV, headers: true) do |row|
   employee = Employee.find_by(email: row['Email'])
-  company = Company.find_by(siret: row['SIRET'])
+  company = employee.company
   next unless employee && company
 
-  leave_requests << LeaveRequest.new(
-    employee: employee,
-    company: company,
-    date: Date.strptime(row['Date'], '%d/%m/%y'),
-    duration: row['Durée'],
-    status: row['Etat']
-  )
-end
-
-leave_requests.each_slice(999) do |batch|
-  LeaveRequest.import batch, validate: true
+  LeaveRequest.insert_all([
+    {
+      employee_id: employee.id,
+      company_id: company.id,
+      date: Date.strptime(row['Date'], '%d/%m/%y'),
+      duration: row['Durée'],
+      created_at: Time.current,
+      updated_at: Time.current
+    }
+  ])
 end
 
 puts "Seeding complete!"
