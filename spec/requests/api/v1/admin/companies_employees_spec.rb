@@ -2,13 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "API::V1::CompaniesEmployees", type: :request do
   describe "GET /api/v1/admin/companies/:siret/employees" do
-    let(:company) { FactoryBot.create(:company, name: "DevCorp") }
-    let!(:employee1) { FactoryBot.create(:employee) }
-    let!(:employee2) { FactoryBot.create(:employee) }
-
-    before do
-      company.employees << [ employee1, employee2 ]
-    end
+    let(:company) { FactoryBot.create(:company, :with_employees, name: "DevCorp") }
 
     it "returns all employees assigned to the company with company name included" do
       get "/api/v1/admin/companies/#{company.siret}/employees"
@@ -16,7 +10,7 @@ RSpec.describe "API::V1::CompaniesEmployees", type: :request do
       expect(response).to have_http_status(:ok)
 
       json = JSON.parse(response.body)
-      expect(json.size).to eq(2)
+      expect(json.size).to eq(3)
 
       json.each do |employee|
         expect(employee).to include("first_name", "last_name", "email", "country", "company_name")

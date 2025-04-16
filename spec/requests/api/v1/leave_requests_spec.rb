@@ -8,7 +8,7 @@ RSpec.describe "API::V1::LeaveRequests", type: :request do
     let(:valid_params) do
       {
         employee_hr_id: company.employees.first.employee_hr_id,
-        date: (Date.today + 1).to_s,
+        date: (Date.today + 2).to_s,
         duration: "1 day"
       }
     end
@@ -51,8 +51,8 @@ RSpec.describe "API::V1::LeaveRequests", type: :request do
 
   describe "GET /api/v1/leave_requests/pending" do
     before do
-      FactoryBot.create(:leave_request, date: Date.today + 1, employee: employee, company: company)
-      FactoryBot.create(:leave_request, date: Date.today + 2, employee: employee, company: company)
+      FactoryBot.create(:leave_request, date: Date.today + 2, company: company)
+      FactoryBot.create(:leave_request, date: Date.today + 3, company: company)
     end
 
     it "returns only future pending leave requests" do
@@ -67,7 +67,7 @@ RSpec.describe "API::V1::LeaveRequests", type: :request do
   end
 
   describe "PATCH /api/v1/leave_requests/:id/cancel" do
-    let!(:leave_request) { FactoryBot.create(:leave_request, employee: employee, company: company) }
+    let!(:leave_request) { FactoryBot.create(:leave_request, date: Date.today + 3, company: company) }
 
     it "does not cancels a pending leave request" do
       patch "/api/v1/leave_requests/#{leave_request.id}/cancel", params: { employee_hr_id: employee.employee_hr_id }

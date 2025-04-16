@@ -6,7 +6,7 @@ module Api
         before_action :set_employee_by_employee_hr_id, only: [ :create, :destroy ]
 
         def index
-          employees = @company.includes(:employees).employees.ordered_by_name
+          employees = @company.employees.ordered_by_name
 
           render json: employees.map { |employee|
             employee.as_json(only: [ :first_name, :last_name, :email, :country, :employee_hr_id ]).merge(

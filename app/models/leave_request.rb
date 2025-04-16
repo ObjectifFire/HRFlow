@@ -16,6 +16,8 @@ class LeaveRequest < ApplicationRecord
 
   attr_accessor :skip_status_callback
 
+  REQUESTS_STATUS = ['pending', 'validated', 'cancel'].freeze
+
   LEAVE_REQUEST_MAX_DURATION_IN_DAYS = [ 45 ].freeze
 
   def calculate_end_date
@@ -24,6 +26,10 @@ class LeaveRequest < ApplicationRecord
 
   def cancelable?
     status == "pending" && date > Time.current
+  end
+
+  def allowed_status?(update_status)
+    update_status.in?(REQUESTS_STATUS)
   end
 
   private
