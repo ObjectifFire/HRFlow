@@ -74,8 +74,8 @@ RSpec.describe "API::V1::LeaveRequests", type: :request do
 
       expect(response).to have_http_status(:ok)
       json = JSON.parse(response.body)
-      expect(json["message"]).to eq("Leave request cancelled")
-      expect(leave_request.reload.status).to eq("canceled")
+      expect(json["message"]).to eq("Leave request status cancel")
+      expect(leave_request.reload.status).to eq("cancel")
     end
 
     it "returns 404 if leave request not found" do
@@ -91,7 +91,7 @@ RSpec.describe "API::V1::LeaveRequests", type: :request do
       patch "/api/v1/leave_requests/#{leave_request.id}/cancel", params: { employee_hr_id: employee.employee_hr_id }
 
       expect(response).to have_http_status(:unprocessable_entity)
-      expect(JSON.parse(response.body)["error"]).to eq("Only pending requests can be cancelled")
+      expect(JSON.parse(response.body)["error"]).to eq("Only pending requests can be cancel")
     end
   end
 end

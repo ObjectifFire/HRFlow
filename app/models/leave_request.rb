@@ -5,7 +5,6 @@ class LeaveRequest < ApplicationRecord
   validates :duration, :date, presence: :true
   validate :check_start_date
 
-  before_update :check_status
   before_create :check_max_duration
   after_create :set_status, unless: :skip_status_callback
 
@@ -44,9 +43,6 @@ class LeaveRequest < ApplicationRecord
      return unless date < Time.current
 
      errors.add(:date, "has to start after today")
-  end
-
-  def check_status
   end
 
   def set_status

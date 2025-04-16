@@ -26,11 +26,11 @@ class Api::V1::LeaveRequestsController < ApplicationController
 
   def cancel
     unless @leave_request.cancelable?
-      return render json: { error: "Only pending requests can be cancelled" }, status: :unprocessable_entity
+      return render json: { error: "Only pending requests can be cancel" }, status: :unprocessable_entity
     end
 
-    @leave_request.update!(status: "canceled")
-    render json: { message: "Leave request cancelled" }, status: :ok
+    @leave_request.update!(status: "cancel")
+    render json: { message: "Leave request status cancel" }, status: :ok
   end
 
   private
