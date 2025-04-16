@@ -4,7 +4,7 @@ module LeaveRequestBehaviors
   included do
     validate :check_start_date
     validate :check_max_duration
-    validate :check_max_end_date
+    validate :check_max_start_date
     after_create :set_status, unless: :skip_status_callback
 
     attr_accessor :skip_status_callback
@@ -44,8 +44,10 @@ module LeaveRequestBehaviors
     errors.add(:date, "has to start after today")
   end
 
-  def check_max_end_date
-    calculate_end_date
+  def check_max_start_date
+    return unless date.present? && date > 2.years.from_now
+  
+    errors.add(:date, "must be within the next 2 years")
   end
 
   def set_status
