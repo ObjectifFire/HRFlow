@@ -21,6 +21,7 @@ Rails.application.routes.draw do
 
       namespace :admin do
         resources :companies, only: [:index], param: :siret do
+          get "employees", to: "companies_employees#index"
           post "employees/:employee_hr_id", to: "companies_employees#create"
           delete "employees/:employee_hr_id", to: "companies_employees#destroy"
         end
