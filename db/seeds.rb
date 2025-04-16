@@ -54,6 +54,19 @@ links.each_slice(999) do |batch|
   CompaniesEmployee.import batch, validate: false
 end
 
+def map_status(french_status)
+  case french_status.strip.downcase
+  when "en attente de validation"
+    "pending"
+  when "validé"
+    "validated"
+  when "annulé"
+    "cancel"
+  else
+    "pending"
+  end
+end
+
 puts "Importing leave_requests..."
 CSV.foreach(LEAVE_REQUESTS_CSV, headers: true) do |row|
   employee = Employee.find_by(email: row['Email'])
@@ -66,6 +79,7 @@ CSV.foreach(LEAVE_REQUESTS_CSV, headers: true) do |row|
       company_id: company.id,
       date: Date.strptime(row['Date'], '%d/%m/%y'),
       duration: row['Durée'],
+      status: map_status(row['Etat']),
       created_at: Time.current,
       updated_at: Time.current
     }
